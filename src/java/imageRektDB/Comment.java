@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c"),
     @NamedQuery(name = "Comment.findByCid", query = "SELECT c FROM Comment c WHERE c.cid = :cid"),
     @NamedQuery(name = "Comment.findByContents", query = "SELECT c FROM Comment c WHERE c.contents = :contents"),
-    @NamedQuery(name = "Comment.findByCommenttime", query = "SELECT c FROM Comment c WHERE c.commenttime = :commenttime")})
+    @NamedQuery(name = "Comment.findByCommenttime", query = "SELECT c FROM Comment c WHERE c.commenttime = :commenttime")
+})
 public class Comment implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -89,6 +90,8 @@ public class Comment implements Serializable {
     }
 
     public String getContents() {
+        if (contents == null)
+            return "";
         return contents;
     }
 

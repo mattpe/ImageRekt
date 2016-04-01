@@ -31,54 +31,76 @@ import javax.xml.bind.annotation.XmlTransient;
 /**
  *
  * @author Asus
+ * 
+ * Image = any media file (image, audio, video)
  */
 @Entity
 @Table(name = "IMAGE")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Image.findAll", query = "SELECT i FROM Image i"),
+    @NamedQuery(name = "Image.findByType", query = "SELECT i FROM Image i WHERE i.type = :type"),
     @NamedQuery(name = "Image.findByIid", query = "SELECT i FROM Image i WHERE i.iid = :iid"),
     @NamedQuery(name = "Image.findByTitle", query = "SELECT i FROM Image i WHERE i.title = :title"),
     @NamedQuery(name = "Image.findByDescription", query = "SELECT i FROM Image i WHERE i.description = :description"),
     @NamedQuery(name = "Image.findByUploadtime", query = "SELECT i FROM Image i WHERE i.uploadtime = :uploadtime"),
     @NamedQuery(name = "Image.findByPath", query = "SELECT i FROM Image i WHERE i.path = :path"),
     @NamedQuery(name = "Image.findByDescriptionWild", query = "SELECT i FROM Image i WHERE i.description LIKE ?1 ORDER BY i.iid ASC"),
-    @NamedQuery(name = "Image.findByTitleWild", query="SELECT i FROM Image i WHERE i.title LIKE ?1 ORDER BY i.iid ASC")})
+    @NamedQuery(name = "Image.findByTitleWild", query="SELECT i FROM Image i WHERE i.title LIKE ?1 ORDER BY i.iid ASC")
+})
+
 
 public class Image implements Serializable {
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IID")
     private Integer iid;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
     @Column(name = "TITLE")
     private String title;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 140)
     @Column(name = "DESCRIPTION")
     private String description;
+    
     @Column(name = "UPLOADTIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date uploadtime;
+    
+    @Column(name = "TYPE")
+    private String type;
+
+    @Column(name = "MIMETYPE")
+    private String mimeType;
+
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
     @Column(name = "PATH")
     private String path;
+    
     @ManyToMany(mappedBy = "imageCollection")
     private Collection<User> userCollection;
+    
     @ManyToMany(mappedBy = "imageCollection")
     private Collection<Tag> tagCollection;
+    
     @OneToMany(mappedBy = "iid")
     private Collection<Comment> commentCollection;
+    
     @JoinColumn(name = "UID", referencedColumnName = "UID")
     @ManyToOne
     private User uid;
+    
     @OneToMany(mappedBy = "iid")
     private Collection<User> userCollection1;
 
@@ -103,9 +125,27 @@ public class Image implements Serializable {
         this.path = path;
         this.uid = uid;
     }
-    
-    
 
+    public Image(String title, String description, Date uploadtime, String path, User uid, String type) {
+        this.title = title;
+        this.description = description;
+        this.uploadtime = uploadtime;
+        this.path = path;
+        this.uid = uid;
+        this.type = type;
+    }
+    
+    public Image(String title, String description, Date uploadtime, String path, User uid, String type, String mimeType) {
+        this.title = title;
+        this.description = description;
+        this.uploadtime = uploadtime;
+        this.path = path;
+        this.uid = uid;
+        this.type = type;
+        this.mimeType = mimeType;
+    }
+
+    
     public Integer getIid() {
         return iid;
     }
@@ -130,6 +170,27 @@ public class Image implements Serializable {
         this.description = description;
     }
 
+    public String getType () {
+        if (type == null)
+            return "";
+        return type;
+    }
+
+    public void setType (String type) {
+        this.type = type;
+    }
+
+    public String getMimeType () {
+        if (mimeType == null)
+            return "";
+        return mimeType;
+    }
+
+    public void setMimeType (String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    
     public Date getUploadtime() {
         return uploadtime;
     }
@@ -175,6 +236,13 @@ public class Image implements Serializable {
 
     public User getUid() {
         return uid;
+    }
+    
+    // return 0 if null
+    public int getUidInt() {
+        if (uid == null)
+            return 0;
+        return uid.getUid();
     }
 
     public void setUid(User uid) {

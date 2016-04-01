@@ -1,7 +1,19 @@
+Server-side media API for [Web Based Mobile Applications course](https://github.com/mattpe/wbma) 
+
+Forked from: https://github.com/harmittaa/ImageRekt 
+
+---
+
+Original content of this file:
+
+---
+
 # ImageRekt
+
 ##ImageRekt image upload service
 
 ###Made for the Basic Concepts of Web Technology course by
+
 Juhani Lavonen
 
 Matti Mäki-Kihniä
